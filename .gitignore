@@ -1,0 +1,6 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+rag_index.faiss
+rag_chunks.json

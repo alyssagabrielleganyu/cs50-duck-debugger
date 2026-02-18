@@ -1,0 +1,2 @@
+{"event": "chat_request", "meta": {"auth": false, "email": null, "role": null, "mode_used": "student", "use_rag": false, "session_id": "56c6f4b71b124ea6b1baa56bb50c35b6", "ts": 1771432712}}
+{"event": "chat_request", "meta": {"auth": true, "email": "student@example.com", "role": "student", "mode_used": "student", "use_rag": false, "session_id": "193df3a7b0ba4b87be7d118e3cb77ddd", "ts": 1771433260}}
