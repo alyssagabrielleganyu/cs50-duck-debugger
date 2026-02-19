@@ -72,6 +72,7 @@ def call_backend(
         "session_id": session_id,
         "reset_hearts": reset_hearts,
     }
+    
     response = requests.post(
         BACKEND_CHAT_URL,
         json=payload,
