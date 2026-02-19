@@ -49,6 +49,16 @@ INJECTION_CLASSIFIER_MODEL = os.getenv("INJECTION_CLASSIFIER_MODEL", "gpt-4o-min
 LOGGER = logging.getLogger("server.injection")
 init_db()
 
+@app.get("/")
+def root():
+    return {
+        "status": "ok",
+        "service": "cs50-duck-debugger",
+        "docs": "/docs",
+        "health": "/health",
+        "chat": "/chat",
+        "ingest": "/ingest"
+    }
 
 def error_response(
     status_code: int,
