@@ -5,6 +5,8 @@ import json
 import logging
 import os
 import time
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 import uuid
 from pathlib import Path
 from typing import Dict, List, Literal, Optional
@@ -473,7 +475,11 @@ def health() -> dict:
 
 @app.post("/ingest")
 def ingest() -> dict:
+    logger.info("INGEST START")
+    t0 = time.time()
+
     if not DEFAULT_INGEST_PDF_PATH.exists():
+        logger.error("Transcript PDF not found at %s", DEFAULT_INGEST_PDF_PATH)
         return error_response(
             status_code=404,
             error="Default transcript PDF not found.",
@@ -482,17 +488,31 @@ def ingest() -> dict:
         )
 
     try:
-        chunk_records = chunk_pdf(str(DEFAULT_INGEST_PDF_PATH), chunk_tokens=500, overlap_tokens=50)
-        chunks_indexed = build_or_update_index_records(chunk_records, replace=True)
+        chunk_records = chunk_pdf(
+            str(DEFAULT_INGEST_PDF_PATH),
+            chunk_tokens=500,
+            overlap_tokens=50,
+        )
+
+        logger.info("Chunking complete. Total chunks: %d", len(chunk_records))
+
+        chunks_indexed = build_or_update_index_records(
+            chunk_records,
+            replace=True
+        )
+
+        logger.info("Index built in %.2f seconds", time.time() - t0)
+
         return {"status": "ok", "chunks_indexed": chunks_indexed}
+
     except MissingAPIKeyError:
+        logger.error("Missing OpenAI API key during ingest")
         return error_response(
             status_code=401,
             error="Missing OpenAI API key.",
-            error_code="NO_API_KEY",
-            how_to_fix="set OPENAI_API_KEY",
+            error_code="MISSING_API_KEY",
+            how_to_fix="Set OPENAI_API_KEY environment variable",
         )
-
 
 @app.get("/chunks/{chunk_id}")
 def get_chunk_by_id(chunk_id: int) -> dict:
