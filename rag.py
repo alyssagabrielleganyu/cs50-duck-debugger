@@ -17,8 +17,15 @@ from llm import MissingAPIKeyError
 
 load_dotenv()
 
-INDEX_PATH = Path("rag_index.faiss")
-CHUNKS_PATH = Path("rag_chunks.json")
+
+# RAG storage directory
+RAG_DIR = Path(os.getenv("RAG_DIR", "./.rag"))
+RAG_DIR.mkdir(parents=True, exist_ok=True)
+
+CHUNKS_PATH = RAG_DIR / "rag_chunks.json"
+INDEX_PATH = RAG_DIR / "rag_index.faiss"
+
+
 EMBEDDING_MODEL = "text-embedding-3-small"
 MOCK_EMBEDDING_DIM = 256
 REAL_EMBEDDING_DIM = 1536
