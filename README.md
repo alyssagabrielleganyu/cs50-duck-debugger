@@ -17,12 +17,6 @@ This is a static showcase page demonstrating how CS50 Duck Debugger embodies Ant
 - **Durable vs Fragile Skills**: Skills that grow with AI capabilities
 - **AI-Native Learning**: Redesigned from first principles with AI
 
-## Built By
-
-Alyssa Gabrielle Yu  
-For Anthropic Education Labs Senior PM Application  
-April 2026
-
 ## Deploy
 
 ```bash
