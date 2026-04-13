@@ -64,15 +64,22 @@ def create_chat_completion(
     if not api_key.strip():
         raise MissingAPIKeyError("OPENAI_API_KEY is not set.")
 
-    client = OpenAI()
-    instructions = base_prompt
-    if extra_instructions:
-        instructions = f"{base_prompt}\n\n{extra_instructions}"
+    client = OpenAI(api_key=api_key)
+    formatted_messages = _format_input(messages)
 
-    response = client.responses.create(
+    # Build system message
+    system_message = base_prompt
+    if extra_instructions:
+        system_message = f"{base_prompt}\n\n{extra_instructions}"
+
+    # Add system message to beginning if not already present
+    if formatted_messages and formatted_messages[0].get("role") != "system":
+        formatted_messages.insert(0, {"role": "system", "content": system_message})
+
+    response = client.chat.completions.create(
         model=model,
-        instructions=instructions,
-        input=_format_input(messages),
+        messages=formatted_messages,
         temperature=temperature,
     )
-    return (response.output_text or "").strip()
+    
+    return response.choices[0].message.content.strip()
